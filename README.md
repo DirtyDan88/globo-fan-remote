@@ -12,7 +12,7 @@ The alexa-skill-lambda function uses the globo-fan-remote REST interface and ena
 - Digital 38khz IR receiver & transmitter
 - Case: BOXEXPERT RAL7015 Elbe 122x120x55mm
 
-![Hardware](https://raw.githubusercontent.com/DirtyDan88/globo-fan-remote/master/hardware.png)
+![Hardware](https://raw.githubusercontent.com/DirtyDan88/globo-fan-remote/master/hardware.jpg)
 
 ## Software
 
