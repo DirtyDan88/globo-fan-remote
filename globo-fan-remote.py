@@ -74,7 +74,7 @@ class WaveGenerator():
         if wave.pulse_count > (MAX_PULSES_PER_WAVE - 1000):
             wave = Wave()
             self.waves.append(wave)
-        wave.one(durationPulse)	
+        wave.one(durationPulse)
         wave.zero(durationPause)
 
     def generateWave(self, ircode):
@@ -141,7 +141,7 @@ IRCODE_DISCO       = IRCODE_LIGHT_POWER + IRCODE_PREAMBLE
 WAVE_GENERATOR = WaveGenerator()
 
 def checkCredentials(username, password):
-    auth_file = open('auth.txt', 'r')
+    auth_file = open('/home/pi/globo-fan-remote/auth.txt', 'r')
     return username == auth_file.readline().strip() and \
            password == auth_file.readline().strip()
 
