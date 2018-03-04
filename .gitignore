@@ -1,0 +1,4 @@
+*.pyc
+pigpio/
+auth.txt
+log.txt
