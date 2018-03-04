@@ -3,20 +3,18 @@
 #==============================================================================#
 #                           --- globo-fan-remote ---                           #
 #                             author:  Max Stark                               #
-#                             date:    August 2017                             #
+#                             date:    March 2018                              #
 #==============================================================================#
 
-from functools import wraps
-from flask import Flask, request, Response
+from enum import Enum
 
 import logging
 import os
 import ctypes
 import time
 
-app = Flask(__name__)
-
 #===============================================================================
+
 GPIO_PIN = 18
 MAX_PULSES_PER_WAVE = 12000 # from pigpio.h
 FREQUENCY = 38000
@@ -130,6 +128,7 @@ class WaveGenerator():
         self.pigpio.gpioTerminate()
 
 #===============================================================================
+
 IRCODE_PREAMBLE    = "11000000000*11000111111#"
 IRCODE_LIGHT_POWER = IRCODE_PREAMBLE + 4 * "11000000100*"
 IRCODE_LIGHT_DIMM  = "11000010000*"
@@ -138,116 +137,62 @@ IRCODE_FAN_LOW     = IRCODE_PREAMBLE + 4 * "11000100001#"
 IRCODE_FAN_MED     = IRCODE_PREAMBLE + 4 * "11000000010*"
 IRCODE_FAN_HIGH    = IRCODE_PREAMBLE + 4 * "11000000000#"
 IRCODE_DISCO       = IRCODE_LIGHT_POWER + IRCODE_PREAMBLE
+
 WAVE_GENERATOR = WaveGenerator()
 
-def checkCredentials(username, password):
-    auth_file = open('/home/pi/globo-fan-remote/auth.txt', 'r')
-    return username == auth_file.readline().strip() and \
-           password == auth_file.readline().strip()
+#===============================================================================
 
-def basic_auth(function):
-    @wraps(function)
-    def authenticate(*args, **kwargs):
-        credentials = request.authorization
-        if not credentials or not checkCredentials(credentials.username, credentials.password):
-            print('Authorization failed, access denied.')
-            return Response('Unauthorized.', 401)
-        print('Authorization ok, access granted.')
-        return function(*args, **kwargs)
-    return authenticate
+class GloboLightCommand(Enum):
+    POWER = 0
+    DIMM = 1
+    DISCO = 2
 
-@app.route('/globo/<device>/<command>', methods=['GET'])
-@app.route('/globo/<device>/<command>/<value>', methods=['GET'])
-@basic_auth
-def execCommand(device, command, value = None):
-    print("================== Received REST request ==================")
-    if device == 'light':
-        return handleLightCommand(command, value)
-    elif device == 'fan':
-        return handleFanCommand(command, value)
-    else:
-        print("Unknown device '" + device + "'.")
-        return Response('Device not found.', 404)
-
-LIGHT_CURRENT_STATE = "OFF"
-
-def handleLightCommand(command, value):
-    global LIGHT_CURRENT_STATE
-
-    if command == "POWER":
-        print("Send LIGHT POWER command.")
-        WAVE_GENERATOR.generateWave(IRCODE_LIGHT_POWER)
-
-    elif command == "ON":
-        if LIGHT_CURRENT_STATE != "ON":
-            print("Send LIGHT ON command.")
+class GloboLightIRController():
+    def sendCommand(self, command, value):
+        if command == GloboLightCommand.POWER:
+            print("Generate wave: LIGHT POWER")
             WAVE_GENERATOR.generateWave(IRCODE_LIGHT_POWER)
-            LIGHT_CURRENT_STATE = "ON"
+        elif command == GloboLightCommand.DIMM:
+            repeats = ((100 - value) / 10) + 6
+            print("Generate wave: LIGHT DIMM (" + str(value) + "%) with " + str(repeats) + " repeats.")
+            WAVE_GENERATOR.generateWave(IRCODE_PREAMBLE + repeats * IRCODE_LIGHT_DIMM)
+        elif command == "DISCO":
+            print("Generate wave: LIGHT DISCO")
+            WAVE_GENERATOR.generateWave(10 * IRCODE_DISCO)
         else:
-            print("Light is already ON.")
+            print("Unknown light command '" + command + "'.")
+            return
 
-    elif command == "OFF":
-        if LIGHT_CURRENT_STATE != "OFF":
-            print("Send LIGHT OFF command.")
-            WAVE_GENERATOR.generateWave(IRCODE_LIGHT_POWER)
-            LIGHT_CURRENT_STATE = "OFF"
+        print("Sending wave ...")
+        WAVE_GENERATOR.sendWave()
+        print("Sending wave finished.")
+
+#===============================================================================
+
+class GloboFanCommand(Enum):
+    LOW = 0
+    MED = 1
+    HIGH = 2
+    OFF = 3
+
+class GloboFanIRController():
+    def sendCommand(self, command):
+        if command == GloboFanCommand.LOW:
+            print("Send FAN LOW command.")
+            WAVE_GENERATOR.generateWave(IRCODE_FAN_LOW)
+        elif command == GloboFanCommand.MED:
+            print("Send FAN MED command.")
+            WAVE_GENERATOR.generateWave(IRCODE_FAN_MED)
+        elif command == GloboFanCommand.HIGH:
+            print("Send FAN HIGH command.")
+            WAVE_GENERATOR.generateWave(IRCODE_FAN_HIGH)
+        elif command == GloboFanCommand.OFF:
+            print("Send FAN OFF command.")
+            WAVE_GENERATOR.generateWave(IRCODE_FAN_OFF)
         else:
-            print("Light is already OFF.")
+            print("Unknown fan command '" + command + "'.")
+            return
 
-    elif command == "DIMM":
-        # validate input
-        value = int(float(value))
-        if value <= 0:
-            return handleLightCommand("OFF", None)
-        elif value >= 100:
-            return handleLightCommand("ON", None)
-        # prepare the light for DIMM command
-        if LIGHT_CURRENT_STATE == "OFF":
-            WAVE_GENERATOR.generateWave(IRCODE_LIGHT_POWER)
-            WAVE_GENERATOR.sendWave()
-        elif LIGHT_CURRENT_STATE == "DIMM":
-            WAVE_GENERATOR.generateWave(IRCODE_LIGHT_POWER)
-            WAVE_GENERATOR.sendWave()
-            WAVE_GENERATOR.generateWave(IRCODE_LIGHT_POWER)
-            WAVE_GENERATOR.sendWave()
-        # calculate the DIMM signal
-        repeats = ((100 - value) / 10) + 6
-        print("Send LIGHT DIMM command (" + str(value) + "%) with " + str(repeats) + " repeats.")
-        WAVE_GENERATOR.generateWave(IRCODE_PREAMBLE + repeats * IRCODE_LIGHT_DIMM)
-        LIGHT_CURRENT_STATE = "DIMM"
-
-    elif command == "DISCO":
-        print("Send LIGHT DISCO command.")
-        WAVE_GENERATOR.generateWave(10 * IRCODE_DISCO)
-
-    else:
-        print("Unknown command '" + command + "'.")
-        return Response('Unknown command.', 400)
-
-    WAVE_GENERATOR.sendWave()
-    return Response('Command was sent.', 200)
-
-def handleFanCommand(command, value):
-    if command == "ON" or command == "LOW":
-        print("Send FAN LOW command.")
-        WAVE_GENERATOR.generateWave(IRCODE_FAN_LOW)
-    elif command == "MED":
-        print("Send FAN MED command.")
-        WAVE_GENERATOR.generateWave(IRCODE_FAN_MED)
-    elif command == "HIGH":
-        print("Send FAN HIGH command.")
-        WAVE_GENERATOR.generateWave(IRCODE_FAN_HIGH)
-    elif command == "OFF":
-        print("Send FAN OFF command.")
-        WAVE_GENERATOR.generateWave(IRCODE_FAN_OFF)
-    else:
-        print("Unknown fan command '" + command + "'.")
-        return Response('Unknown fan command.', 400)
-    WAVE_GENERATOR.sendWave()
-    return Response('Command was sent.', 200)
-
-################################################################################
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=56123)
-
+        print("Sending wave ...")
+        WAVE_GENERATOR.sendWave()
+        print("Sending wave finished.")
