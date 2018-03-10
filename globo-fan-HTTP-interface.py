@@ -44,11 +44,11 @@ class GloboLightCommandHandler():
 
         elif commandString == "ON":
             if self.__currentStatus != GloboLightStatus.ON:
+                if self.__currentStatus == GloboLightStatus.DIMMED:
+                    commands.append([GloboLightCommand.POWER, None])
                 commands.append([GloboLightCommand.POWER, None])
                 self.__currentStatus = GloboLightStatus.ON
                 self.__currentValue = 100
-                if self.__currentStatus == GloboLightStatus.DIMMED:
-                    commands.append([GloboLightCommand.POWER, None])
             else:
                 print("Light is already ON.")
 
