@@ -74,7 +74,7 @@ def handleDiscoveryRequest(event):
 #===============================================================================
 def handleControlRequest(event):
     applianceId = event['payload']['appliance']['applianceId']
-    
+
     try:
         if applianceId == 'light':
             execLightCommand(applianceId, event)
@@ -85,7 +85,7 @@ def handleControlRequest(event):
 
         requestType = event['header']['name']
         responseType = requestType.replace('Request', 'Confirmation')
-        
+
     except Exception as ex:
         responseType = str(ex)
 
@@ -113,7 +113,7 @@ def execLightCommand(applianceId, event):
         if value < 0 or value > 100:
             raise Exception('ValueOutOfRangeError')
     else:
-        raise Exception('UnsupportedOperationError') 
+        raise Exception('UnsupportedOperationError')
 
     execCommand(applianceId, command, value)
 
@@ -152,6 +152,7 @@ def execCommand(applianceId, command, value):
     try:
         request = urllib2.Request(url)
         request.add_header('Authorization', os.environ['BASIC_AUTH'])
+        request.get_method = lambda: 'PUT'
         response = urllib2.urlopen(request)
 
         if response.code == 401:
