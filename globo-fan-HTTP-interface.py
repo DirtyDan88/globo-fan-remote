@@ -102,7 +102,9 @@ class GloboFanCommandHandler():
         self.__currentStatus = GloboFanCommand.OFF
 
     def handleCommand(self, commandString):
-        if commandString == "ON" or commandString == "LOW":
+        if commandString == "ON":
+            command = GloboFanCommand.LOW
+        elif commandString == "LOW":
             command = GloboFanCommand.LOW
         elif commandString == "MED":
             command = GloboFanCommand.MED
@@ -118,12 +120,12 @@ class GloboFanCommandHandler():
             return Response('Fan already in desired status.', 200)
 
         thread.start_new_thread(self.__submitCommand, (command,))
+        self.__currentStatus = command
         return Response('Command was submitted.', 200)
 
     def __submitCommand(self, command):
         print("Send " + str(command))
         self.__fanIRCtrl.sendCommand(command)
-        self.__currentStatus == command
 
     def getStatus(self):
         return str(self.__currentStatus)
