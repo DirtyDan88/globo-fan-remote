@@ -2,3 +2,4 @@
 pigpio/
 auth.txt
 log.txt
+.lock
