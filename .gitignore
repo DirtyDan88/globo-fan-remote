@@ -1,5 +1,8 @@
-*.pyc
-pigpio/
+**/target/*
+**/node_modules/*
+**/pigpio/*
+
 auth.txt
 log.txt
-.lock
+
+**/.*
