@@ -1,0 +1,15 @@
+{
+    "name": "alexa-skill-lambda",
+    "description": "Alexa Skill (API version 3) for the Globo Lighting Fabiola ceiling fan.",
+    "version": "1.0.0",
+    "author": "Max Stark",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DirtyDan88/globo-fan-remote"
+    },
+    "dependencies": {
+        "axios": "^0.19.2"
+    },
+    "engine": "node >= 12.16.3"
+}
