@@ -94,7 +94,7 @@ class GloboLightCommandHandler():
             self.__lightIRCtrl.sendCommand(command[0], command[1])
 
     def getStatus(self):
-        return str(self.__currentStatus)
+        return str(self.__currentStatus) + ":" + str(self.__currentValue)
 
 #===============================================================================
 
