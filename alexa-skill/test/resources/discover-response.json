@@ -1,0 +1,131 @@
+{
+    "event": {
+        "header": {
+            "namespace": "Alexa.Discovery",
+            "name": "Discover.Response",
+            "messageId": "the-message-id",
+            "payloadVersion": "3"
+        },
+        "payload": {
+            "endpoints": [
+                {
+                    "endpointId": "light-v3",
+                    "friendlyName": "Deckenlicht",
+                    "description": "Globo Lighting Fabiola 0306",
+                    "displayCategories": [
+                        "LIGHT"
+                    ],
+                    "manufacturerName": "Globo Fan Remote by DirtyDan",
+                    "capabilities": [
+                        {
+                            "type": "AlexaInterface",
+                            "interface": "Alexa",
+                            "version": "3"
+                        },
+                        {
+                            "type": "AlexaInterface",
+                            "interface": "Alexa.EndpointHealth",
+                            "version": "3",
+                            "properties": {
+                                "supported": [
+                                    {
+                                        "name": "connectivity"
+                                    }
+                                ],
+                                "proactivelyReported": "false",
+                                "retrievable": "true"
+                            }
+                        },
+                        {
+                            "type": "AlexaInterface",
+                            "interface": "Alexa.PowerController",
+                            "version": "3",
+                            "properties": {
+                                "supported": [
+                                    {
+                                        "name": "powerState"
+                                    }
+                                ],
+                                "proactivelyReported": "false",
+                                "retrievable": "true"
+                            }
+                        },
+                        {
+                            "type": "AlexaInterface",
+                            "interface": "Alexa.BrightnessController",
+                            "version": "3",
+                            "properties": {
+                                "supported": [
+                                    {
+                                        "name": "brightness"
+                                    }
+                                ],
+                                "proactivelyReported": "false",
+                                "retrievable": "true"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "endpointId": "fan-v3",
+                    "friendlyName": "Ventilator",
+                    "description": "Globo Lighting Fabiola 0306",
+                    "displayCategories": [
+                        "SWITCH",
+                        "FAN"
+                    ],
+                    "manufacturerName": "Globo Fan Remote by DirtyDan",
+                    "capabilities": [
+                        {
+                            "type": "AlexaInterface",
+                            "interface": "Alexa",
+                            "version": "3"
+                        },
+                        {
+                            "type": "AlexaInterface",
+                            "interface": "Alexa.EndpointHealth",
+                            "version": "3",
+                            "properties": {
+                                "supported": [
+                                    {
+                                        "name": "connectivity"
+                                    }
+                                ],
+                                "proactivelyReported": "false",
+                                "retrievable": "true"
+                            }
+                        },
+                        {
+                            "type": "AlexaInterface",
+                            "interface": "Alexa.PowerController",
+                            "version": "3",
+                            "properties": {
+                                "supported": [
+                                    {
+                                        "name": "powerState"
+                                    }
+                                ],
+                                "proactivelyReported": "false",
+                                "retrievable": "true"
+                            }
+                        },
+                        {
+                            "type": "AlexaInterface",
+                            "interface": "Alexa.PowerLevelController",
+                            "version": "3",
+                            "properties": {
+                                "supported": [
+                                    {
+                                        "name": "powerLevel"
+                                    }
+                                ],
+                                "proactivelyReported": "false",
+                                "retrievable": "true"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

@@ -1,0 +1,18 @@
+{
+    "event": {
+        "header": {
+            "namespace": "Alexa",
+            "name": "ErrorResponse",
+            "messageId": "the-message-id",
+            "correlationToken": "the-correlation-token",
+            "payloadVersion": "3"
+        },
+        "endpoint": {
+            "endpointId": "light-v3"
+        },
+        "payload": {
+            "type": "INTERNAL_ERROR",
+            "message": "the-error-message"
+        }
+    }
+}

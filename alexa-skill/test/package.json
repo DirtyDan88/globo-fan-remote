@@ -1,0 +1,23 @@
+{
+    "name": "alexa-skill-lambda-test",
+    "description": "Test-Suite for sl-lambda-proxy",
+    "version": "1.0.0",
+    "author": "Max Stark",
+    "license": "MIT",
+    "scripts": {
+        "test": "jest",
+        "test:watch": "jest --watch"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://git.sovanta.com/smartliving/alexa-skill-component"
+    },
+    "devDependencies": {
+        "chai": "^4.2.0",
+        "chai-exclude": "^2.0.2",
+        "jest": "^26.0.1",
+        "lambda-tester": "^4.0.1",
+        "nock": "^12.0.3"
+    },
+    "engine": "node >= 10.18.0"
+}

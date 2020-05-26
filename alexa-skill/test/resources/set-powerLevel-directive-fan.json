@@ -1,0 +1,21 @@
+{
+    "directive": {
+        "header": {
+            "namespace": "Alexa.PowerLevelController",
+            "name": "SetPowerLevel",
+            "messageId": "the-message-id",
+            "correlationToken": "the-correlation-token",
+            "payloadVersion": "3"
+        },
+        "endpoint": {
+            "endpointId": "fan-v3",
+            "scope": {
+                "type": "BearerToken",
+                "token": "the-access-token"
+            }
+        },
+        "payload": {
+            "powerLevel": 50
+        }
+    }
+}

@@ -1,0 +1,41 @@
+{
+    "event": {
+        "header": {
+            "namespace": "Alexa",
+            "name": "StateReport",
+            "messageId": "the-message-id",
+            "correlationToken": "the-correlation-token",
+            "payloadVersion": "3"
+        },
+        "endpoint": {
+            "endpointId": "light-v3"
+        }
+    },
+    "context": {
+        "properties": [
+            {
+                "namespace": "Alexa.EndpointHealth",
+                "name": "connectivity",
+                "value": {
+                    "value": "OK"
+                },
+                "timeOfSample": "the-time-of-sample",
+                "uncertaintyInMilliseconds": 0
+            },
+            {
+                "namespace": "Alexa.PowerController",
+                "name": "powerState",
+                "value": "OFF",
+                "timeOfSample": "the-time-of-sample",
+                "uncertaintyInMilliseconds": 0
+            },
+            {
+                "namespace": "Alexa.BrightnessController",
+                "name": "brightness",
+                "value": "0",
+                "timeOfSample": "the-time-of-sample",
+                "uncertaintyInMilliseconds": 0
+            }
+        ]
+    }
+}

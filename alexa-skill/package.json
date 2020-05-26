@@ -5,6 +5,8 @@
     "author": "Max Stark",
     "license": "MIT",
     "scripts": {
+        "test": "cd ./test && npm run test",
+        "test:watch": "cd ./test && npm run test:watch",
         "clean": "gulp clean",
         "install": "cd ./src && npm install",
         "package": "npm run clean && cd ./src && npm install --only=production && cd .. && gulp package",

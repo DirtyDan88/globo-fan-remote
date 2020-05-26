@@ -1,0 +1,25 @@
+{
+    "event": {
+        "header": {
+            "namespace": "Alexa",
+            "name": "Response",
+            "messageId": "the-message-id",
+            "correlationToken": "the-correlation-token",
+            "payloadVersion": "3"
+        },
+        "endpoint": {
+            "endpointId": "fan-v3"
+        }
+    },
+    "context": {
+        "properties": [
+            {
+                "namespace": "Alexa.PowerController",
+                "name": "powerState",
+                "value": "ON",
+                "timeOfSample": "the-time-of-sample",
+                "uncertaintyInMilliseconds": 0
+            }
+        ]
+    }
+}
