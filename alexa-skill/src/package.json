@@ -9,7 +9,7 @@
         "url": "https://github.com/DirtyDan88/globo-fan-remote"
     },
     "dependencies": {
-        "axios": "^0.21.1"
+        "axios": "^0.21.2"
     },
     "engine": "node >= 12.16.3"
 }
